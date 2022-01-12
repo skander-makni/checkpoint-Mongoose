@@ -1,3 +1,5 @@
+const Contact = require("../../model/Contact");
+
 const getcontact = async (req, res) => {
   try {
     const listofcontacts = await Contact.find();
@@ -36,19 +38,21 @@ const getonecontact = async (req, res) => {
   try {
     const { _id } = req.params;
     const contacttofind = await Contact.findOne({ _id });
-    res.sataus(200).send({ ms: "i find the contact", contacttofind });
+    res.status(200).send({ ms: "i find the contact", contacttofind });
   } catch (error) {
-    res.status(400).send({ msg: "can not delete", error });
+    res.status(400).send({ msg: "can not find", error });
   }
 };
 const updatecontact = async (req, res) => {
   try {
     const { _id } = req.params;
     const newContact = req.body;
-    let result = await Contact.updateOne({ _id }, { $set: { ...newContact } });
-    if (result.nModified === 0) {
-      return res.status(400).send({ msg: "contact already updated" });
-    }
+
+    await Contact.updateOne({ _id }, { $set: { ...newContact } });
+    // console.log(result);
+    // if (result.nModified === 0) {
+    //   return res.status(400).send({ msg: "contact already updated" });
+    // }
     res.status(200).send({ msg: "contact updated succ" });
   } catch (error) {
     res.status(400).send({ msg: "can not update ", error });
